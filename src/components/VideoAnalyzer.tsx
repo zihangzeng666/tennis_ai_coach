@@ -11,6 +11,7 @@ import { VideoCompressor } from '@/utils/videoCompressor';
 import VideoTrimmer from './VideoTrimmer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { drawRobustSkeleton, SkeletonStyle } from '@/utils/drawingUtils';
+import { usePose } from '@/context/PoseContext';
 
 interface VideoAnalyzerProps {
     videoFile?: File;
@@ -27,15 +28,13 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
 
     const [videoUrl, setVideoUrl] = useState<string>('');
     const [isPlaying, setIsPlaying] = useState(false);
-    const [isModelLoading, setIsModelLoading] = useState(true);
     const [isExporting, setIsExporting] = useState(false);
 
     // View State
     const [viewMode, setViewMode] = useState<'overlay' | 'side-by-side' | 'skeleton'>('overlay');
 
-    // Detectors
-    const [poseDetector, setPoseDetector] = useState<any>(null);
-    const [proPoseDetector, setProPoseDetector] = useState<any>(null);
+    // Detectors from Context
+    const { poseDetector, proPoseDetector, isModelLoading } = usePose();
 
     // Analysis State
     const [kneeBend, setKneeBend] = useState<{ angle: number, status: 'Good' | "Granny's Legs" } | null>(null);
@@ -308,44 +307,16 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
 
     }, [skeletonStyle, bgStyle, isRecording, proVideoUrl, courtLines, ballTracker]);
 
-    const onScriptLoad = () => {
-        const initPose = async () => {
-            // @ts-ignore
-            if (typeof window !== 'undefined' && window.Pose) {
-                // @ts-ignore
-                const pose = new window.Pose({
-                    locateFile: (file: string) => 'https://cdn.jsdelivr.net/npm/@mediapipe/pose/' + file
-                });
-                pose.setOptions({
-                    modelComplexity: 1,
-                    smoothLandmarks: true,
-                    minDetectionConfidence: 0.5,
-                    minTrackingConfidence: 0.5
-                });
-                pose.onResults(onResults);
-                setPoseDetector(pose);
-
-                // @ts-ignore
-                const proPose = new window.Pose({
-                    locateFile: (file: string) => 'https://cdn.jsdelivr.net/npm/@mediapipe/pose/' + file
-                });
-                proPose.setOptions({
-                    modelComplexity: 1,
-                    smoothLandmarks: true,
-                    minDetectionConfidence: 0.5,
-                    minTrackingConfidence: 0.5
-                });
-                proPose.onResults((results: any) => {
-                    if (results.poseLandmarks) {
-                        proLandmarksRef.current = results.poseLandmarks;
-                    }
-                });
-                setProPoseDetector(proPose);
-                setIsModelLoading(false);
-            }
-        };
-        initPose();
-    };
+    // Initialize Pro Pose Listener
+    useEffect(() => {
+        if (proPoseDetector) {
+            proPoseDetector.onResults((results: any) => {
+                if (results.poseLandmarks) {
+                    proLandmarksRef.current = results.poseLandmarks;
+                }
+            });
+        }
+    }, [proPoseDetector]);
 
     useEffect(() => {
         if (poseDetector) {
@@ -580,8 +551,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
     return (
         <div className="w-full max-w-7xl mx-auto p-4 space-y-6">
             <Script
-                src="https://cdn.jsdelivr.net/npm/@mediapipe/pose/pose.js"
-                onLoad={onScriptLoad}
+                src="https://cdn.jsdelivr.net/npm/@mediapipe/drawing_utils/drawing_utils.js"
                 strategy="afterInteractive"
             />
             <Script

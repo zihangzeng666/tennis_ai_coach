@@ -25,6 +25,8 @@ export const viewport = {
   userScalable: false,
 };
 
+import { PoseProvider } from '@/context/PoseContext';
+
 export default function RootLayout({
   children,
 }: Readonly<{
@@ -36,7 +38,9 @@ export default function RootLayout({
         className={`${geistSans.variable} ${geistMono.variable} antialiased`}
       >
         <ThemeProvider>
-          {children}
+          <PoseProvider>
+            {children}
+          </PoseProvider>
         </ThemeProvider>
       </body>
     </html>
