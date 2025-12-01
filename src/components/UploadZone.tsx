@@ -88,7 +88,7 @@ export default function UploadZone({ onFileSelected }: UploadZoneProps) {
         <div
           {...getRootProps()}
           className={clsx(
-            "relative w-full max-w-2xl p-4 rounded-2xl backdrop-blur-xl border-2 flex flex-col sm:flex-row items-center gap-4 sm:gap-6 cursor-pointer transition-all duration-500 group/card text-center sm:text-left",
+            "relative w-full max-w-2xl p-3 md:p-4 rounded-2xl backdrop-blur-xl border-2 flex flex-col sm:flex-row items-center gap-3 sm:gap-6 cursor-pointer transition-all duration-500 group/card text-center sm:text-left",
             isDragActive
               ? "bg-blue-500/20 border-blue-400 scale-105 shadow-[0_0_50px_rgba(59,130,246,0.5)]"
               : "bg-white/10 border-white/20 hover:bg-white/15 hover:border-white/40 hover:scale-105 hover:shadow-2xl"
@@ -99,25 +99,25 @@ export default function UploadZone({ onFileSelected }: UploadZoneProps) {
           {/* Icon */}
           <div className="relative shrink-0">
             <div className={clsx(
-              "w-12 h-12 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center transition-all duration-500",
+              "w-10 h-10 sm:w-16 sm:h-16 rounded-xl flex items-center justify-center transition-all duration-500",
               isDragActive ? "bg-blue-500 text-white scale-110" : "bg-white/10 text-white/80 group-hover/card:bg-white/20 group-hover/card:text-white"
             )}>
               {isDragActive ? (
-                <FileVideo className="w-6 h-6 sm:w-8 sm:h-8 animate-bounce" />
+                <FileVideo className="w-5 h-5 sm:w-8 sm:h-8 animate-bounce" />
               ) : (
-                <Upload className="w-6 h-6 sm:w-8 sm:h-8" />
+                <Upload className="w-5 h-5 sm:w-8 sm:h-8" />
               )}
             </div>
           </div>
 
           {/* Text Content */}
           <div className="flex-1">
-            <h3 className="text-lg sm:text-xl font-bold text-white tracking-tight">
+            <h3 className="text-base sm:text-xl font-bold text-white tracking-tight">
               {isDragActive ? "Drop Video" : "Upload Your Swing"}
             </h3>
-            <p className="text-xs sm:text-sm text-white/60 font-medium mt-1 sm:mt-0">
+            <p className="text-[10px] sm:text-sm text-white/60 font-medium mt-0.5 sm:mt-0">
               Let AI do the rest.
-              <span className="block sm:inline sm:ml-2 sm:border-l sm:border-white/20 sm:pl-2 mt-1 sm:mt-0 text-[10px] sm:text-xs opacity-50 uppercase tracking-wider">MP4 • MOV • AVI</span>
+              <span className="block sm:inline sm:ml-2 sm:border-l sm:border-white/20 sm:pl-2 mt-0.5 sm:mt-0 text-[9px] sm:text-xs opacity-50 uppercase tracking-wider">MP4 • MOV • AVI</span>
             </p>
           </div>
 
