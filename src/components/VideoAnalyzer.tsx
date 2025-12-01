@@ -626,7 +626,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                             title="Overlay View"
                         >
                             <Eye className={clsx("w-4 h-4", viewMode === 'overlay' && "stroke-[2.5px]")} />
-                            <span className="text-sm">Overlay</span>
+                            <span className="hidden sm:inline text-sm">Overlay</span>
                         </button>
                         <button
                             onClick={() => setViewMode('side-by-side')}
@@ -639,7 +639,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                             title="Side-by-Side View"
                         >
                             <Grid className={clsx("w-4 h-4", viewMode === 'side-by-side' && "stroke-[2.5px]")} />
-                            <span className="text-sm">Split</span>
+                            <span className="hidden sm:inline text-sm">Split</span>
                         </button>
                         <button
                             onClick={() => setViewMode('skeleton')}
@@ -652,7 +652,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                             title="Skeleton Only"
                         >
                             <Zap className={clsx("w-4 h-4", viewMode === 'skeleton' && "stroke-[2.5px]")} />
-                            <span className="text-sm">Skeleton</span>
+                            <span className="hidden sm:inline text-sm">Skeleton</span>
                         </button>
                     </div>
                 </div>
@@ -787,13 +787,13 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
 
                 {/* Left Column: Video Analysis */}
                 <div className="lg:col-span-2 space-y-6">
-                    <div className={clsx("relative bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 group", viewMode === 'side-by-side' ? "aspect-[2/1]" : "aspect-video")}>
+                    <div className={clsx("relative bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 group", viewMode === 'side-by-side' ? "aspect-[8/9] md:aspect-[2/1]" : "aspect-video")}>
 
                         {/* Container for Side-by-Side Logic */}
-                        <div className={clsx("w-full h-full flex", viewMode === 'side-by-side' ? "flex-row" : "relative")}>
+                        <div className={clsx("w-full h-full flex", viewMode === 'side-by-side' ? "flex-col md:flex-row" : "relative")}>
 
                             {/* Video / Overlay Side */}
-                            <div className={clsx("relative h-full", viewMode === 'side-by-side' ? "w-1/2 border-r border-white/10" : "w-full", viewMode === 'skeleton' && "hidden")}>
+                            <div className={clsx("relative", viewMode === 'side-by-side' ? "w-full h-1/2 md:w-1/2 md:h-full border-b md:border-b-0 md:border-r border-white/10" : "w-full h-full", viewMode === 'skeleton' && "hidden")}>
                                 <video
                                     ref={videoRef}
                                     src={videoUrl || undefined}
@@ -812,7 +812,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                             </div>
 
                             {/* Skeleton Side */}
-                            <div className={clsx("relative h-full", viewMode === 'side-by-side' ? "w-1/2" : "w-full", viewMode === 'overlay' && "hidden")}>
+                            <div className={clsx("relative", viewMode === 'side-by-side' ? "w-full h-1/2 md:w-1/2 md:h-full" : "w-full h-full", viewMode === 'overlay' && "hidden")}>
                                 <canvas
                                     ref={skeletonCanvasRef}
                                     className="absolute top-0 left-0 w-full h-full object-contain z-20"

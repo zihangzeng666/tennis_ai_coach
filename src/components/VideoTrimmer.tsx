@@ -161,7 +161,7 @@ export default function VideoTrimmer({ file, onConfirm, onCancel }: VideoTrimmer
                         step={0.1}
                         value={startTime}
                         onChange={handleStartChange}
-                        className="absolute w-full h-2 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-8 [&::-webkit-slider-thumb]:bg-yellow-500 dark:[&::-webkit-slider-thumb]:bg-[#D4F804] [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:cursor-ew-resize [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20"
+                        className="absolute w-full h-2 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-8 [&::-webkit-slider-thumb]:bg-yellow-500 dark:[&::-webkit-slider-thumb]:bg-[#D4F804] [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:cursor-ew-resize [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20"
                     />
 
                     {/* End Slider */}
@@ -172,7 +172,7 @@ export default function VideoTrimmer({ file, onConfirm, onCancel }: VideoTrimmer
                         step={0.1}
                         value={endTime}
                         onChange={handleEndChange}
-                        className="absolute w-full h-2 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:w-4 [&::-webkit-slider-thumb]:h-8 [&::-webkit-slider-thumb]:bg-blue-600 dark:[&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:cursor-ew-resize [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20"
+                        className="absolute w-full h-2 appearance-none bg-transparent pointer-events-none [&::-webkit-slider-thumb]:pointer-events-auto [&::-webkit-slider-thumb]:w-6 [&::-webkit-slider-thumb]:h-8 [&::-webkit-slider-thumb]:bg-blue-600 dark:[&::-webkit-slider-thumb]:bg-blue-500 [&::-webkit-slider-thumb]:rounded-sm [&::-webkit-slider-thumb]:appearance-none [&::-webkit-slider-thumb]:cursor-ew-resize [&::-webkit-slider-thumb]:relative [&::-webkit-slider-thumb]:z-20"
                     />
                 </div>
 

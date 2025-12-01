@@ -115,12 +115,12 @@ function HomeContent() {
         <motion.header
           initial={{ opacity: 0, y: -20 }}
           animate={{ opacity: 1, y: 0 }}
-          className="mb-12 text-center pt-12"
+          className="mb-8 md:mb-12 text-center pt-16 md:pt-12"
         >
-          <h1 className="text-6xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter drop-shadow-sm">
+          <h1 className="text-4xl md:text-6xl font-black text-slate-900 dark:text-white mb-4 tracking-tighter drop-shadow-sm">
             Skeleton <span className="text-transparent bg-clip-text bg-gradient-to-r from-yellow-500 to-amber-600 dark:from-[#D4F804] dark:to-[#A3C000]">Tennis</span>
           </h1>
-          <p className="text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto font-medium">
+          <p className="text-lg md:text-xl text-slate-600 dark:text-slate-400 max-w-2xl mx-auto font-medium px-4">
             Turn your videos into skeleton, <span className="opacity-80">have fun.</span>
           </p>
         </motion.header>
