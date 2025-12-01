@@ -199,7 +199,7 @@ function HomeContent() {
       {/* Author Footer */}
       <footer className="absolute bottom-4 left-0 right-0 text-center z-10 pointer-events-none">
         <p className="text-sm font-medium text-slate-400 dark:text-slate-600 tracking-wide">
-          Designed & Built by <span className="text-slate-600 dark:text-slate-400 font-bold">JasonZeng</span>
+          Designed & Built by <span className="text-slate-600 dark:text-slate-400 font-bold">v1.1.1 JasonZeng</span>
         </p>
       </footer>
     </div >

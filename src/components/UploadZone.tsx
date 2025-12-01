@@ -68,7 +68,7 @@ export default function UploadZone({ onFileSelected }: UploadZoneProps) {
       {/* Decorative Top Bar */}
       <div className="absolute top-0 left-0 right-0 p-6 flex justify-between items-start z-10 opacity-50 pointer-events-none">
         <div className="text-xs font-mono text-white/40 bg-black/20 backdrop-blur-sm px-3 py-1 rounded-full">
-          AI POWERED BY JASONZENG
+          AI POWERED BY v1.1.1 JASONZENG
         </div>
         <div className="flex gap-1 bg-black/20 backdrop-blur-sm px-3 py-2 rounded-full">
           {[0, 1, 2, 3].map((i) => (

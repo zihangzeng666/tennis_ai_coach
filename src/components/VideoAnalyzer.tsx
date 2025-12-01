@@ -88,7 +88,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
         ctx.font = "bold 24px Arial";
         ctx.fillStyle = "rgba(255, 255, 255, 0.5)";
         ctx.textAlign = "right";
-        ctx.fillText("JasonZeng AI", width - 20, height - 20);
+        ctx.fillText("v1.1.1 JasonZeng AI", width - 20, height - 20);
         ctx.restore();
     };
 
