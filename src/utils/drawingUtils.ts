@@ -28,7 +28,7 @@ export function drawRobustSkeleton(
     } else if (style === 'geometric') {
         drawGeometricStyle(ctx, landmarks);
     } else if (style === 'cartoon') {
-        drawCartoonStyle(ctx, landmarks);
+        drawPandaStyle(ctx, landmarks);
     }
 
     ctx.restore();
@@ -139,19 +139,15 @@ function drawGeometricStyle(ctx: CanvasRenderingContext2D, landmarks: any[]) {
     });
 }
 
-function drawCartoonStyle(ctx: CanvasRenderingContext2D, landmarks: any[]) {
-    // Cute, thick, rounded style
-    const limbColor = '#ffffff';
-    const jointColor = '#ffc0cb'; // Pink
-    const outlineColor = '#000000';
+function drawPandaStyle(ctx: CanvasRenderingContext2D, landmarks: any[]) {
+    // Panda Colors
+    const furWhite = '#ffffff';
+    const furBlack = '#1a1a1a';
 
-    ctx.lineCap = 'round';
-    ctx.lineJoin = 'round';
-
-    // 1. Draw Limbs (Thick Capsules)
-    POSE_CONNECTIONS.forEach(([start, end]) => {
-        const p1 = landmarks[start];
-        const p2 = landmarks[end];
+    // Helper to draw rotated ellipse (limb segment)
+    const drawLimb = (startIdx: number, endIdx: number, thickness: number, color: string) => {
+        const p1 = landmarks[startIdx];
+        const p2 = landmarks[endIdx];
         if (!p1 || !p2 || (p1.visibility && p1.visibility < 0.5) || (p2.visibility && p2.visibility < 0.5)) return;
 
         const x1 = p1.x * ctx.canvas.width;
@@ -159,68 +155,143 @@ function drawCartoonStyle(ctx: CanvasRenderingContext2D, landmarks: any[]) {
         const x2 = p2.x * ctx.canvas.width;
         const y2 = p2.y * ctx.canvas.height;
 
-        // Outline
+        const length = Math.hypot(x2 - x1, y2 - y1);
+        const angle = Math.atan2(y2 - y1, x2 - x1);
+        const cx = (x1 + x2) / 2;
+        const cy = (y1 + y2) / 2;
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(angle);
+
+        // Draw Ellipse
         ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.strokeStyle = outlineColor;
-        ctx.lineWidth = 14;
-        ctx.stroke();
-
-        // Fill
-        ctx.beginPath();
-        ctx.moveTo(x1, y1);
-        ctx.lineTo(x2, y2);
-        ctx.strokeStyle = limbColor;
-        ctx.lineWidth = 10;
-        ctx.stroke();
-    });
-
-    // 2. Draw Joints (Circles)
-    landmarks.forEach((landmark: any, index: number) => {
-        if (index > 32 || (landmark.visibility && landmark.visibility < 0.5)) return;
-
-        const x = landmark.x * ctx.canvas.width;
-        const y = landmark.y * ctx.canvas.height;
-
-        let radius = 6;
-        let color = jointColor;
-
-        // Head (Nose)
-        if (index === 0) {
-            radius = 20; // Big head
-            color = '#ffffff';
-        }
-        // Hands/Feet
-        else if (index >= 15 && index <= 22 || index >= 27) {
-            radius = 10; // Big paws
-        }
-
-        // Outline
-        ctx.beginPath();
-        ctx.arc(x, y, radius + 2, 0, 2 * Math.PI);
-        ctx.fillStyle = outlineColor;
+        ctx.ellipse(0, 0, length / 2 + thickness / 2, thickness, 0, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
         ctx.fill();
 
-        // Fill
+        // Optional: Slight border for definition
+        ctx.strokeStyle = 'rgba(0,0,0,0.1)';
+        ctx.lineWidth = 1;
+        ctx.stroke();
+
+        ctx.restore();
+    };
+
+    const drawCircle = (index: number, radius: number, color: string) => {
+        const p = landmarks[index];
+        if (!p || (p.visibility && p.visibility < 0.5)) return;
+        const x = p.x * ctx.canvas.width;
+        const y = p.y * ctx.canvas.height;
+
         ctx.beginPath();
         ctx.arc(x, y, radius, 0, 2 * Math.PI);
         ctx.fillStyle = color;
         ctx.fill();
+    };
 
-        // Eyes (if Head)
-        if (index === 0) {
-            ctx.fillStyle = '#000';
-            // Left Eye
-            ctx.beginPath();
-            ctx.arc(x - 6, y - 2, 2, 0, 2 * Math.PI);
-            ctx.fill();
-            // Right Eye
-            ctx.beginPath();
-            ctx.arc(x + 6, y - 2, 2, 0, 2 * Math.PI);
-            ctx.fill();
-        }
-    });
+    // --- 1. Ears (Behind Head) ---
+    // Estimate ear positions relative to nose/eyes
+    const nose = landmarks[0];
+    const leftEye = landmarks[2];
+    const rightEye = landmarks[5];
+
+    if (nose && leftEye && rightEye) {
+        const nx = nose.x * ctx.canvas.width;
+        const ny = nose.y * ctx.canvas.height;
+        const lex = leftEye.x * ctx.canvas.width;
+        const ley = leftEye.y * ctx.canvas.height;
+        const rex = rightEye.x * ctx.canvas.width;
+        const rey = rightEye.y * ctx.canvas.height;
+
+        // Simple ear offset logic
+        const earRadius = 18;
+        ctx.beginPath();
+        ctx.arc(lex - 15, ley - 15, earRadius, 0, 2 * Math.PI); // Left Ear
+        ctx.arc(rex + 15, rey - 15, earRadius, 0, 2 * Math.PI); // Right Ear
+        ctx.fillStyle = furBlack;
+        ctx.fill();
+    }
+
+    // --- 2. Limbs (Black/White) ---
+    // Arms (Black)
+    drawLimb(11, 13, 18, furBlack); // L Shoulder -> Elbow
+    drawLimb(13, 15, 16, furBlack); // L Elbow -> Wrist
+    drawLimb(12, 14, 18, furBlack); // R Shoulder -> Elbow
+    drawLimb(14, 16, 16, furBlack); // R Elbow -> Wrist
+
+    // Legs (Black)
+    drawLimb(23, 25, 22, furBlack); // L Hip -> Knee
+    drawLimb(25, 27, 20, furBlack); // L Knee -> Ankle
+    drawLimb(24, 26, 22, furBlack); // R Hip -> Knee
+    drawLimb(26, 28, 20, furBlack); // R Knee -> Ankle
+
+    // Torso (White)
+    // Draw a big oval between shoulders and hips
+    const lShoulder = landmarks[11];
+    const rShoulder = landmarks[12];
+    const lHip = landmarks[23];
+    const rHip = landmarks[24];
+
+    if (lShoulder && rShoulder && lHip && rHip) {
+        const sx = (lShoulder.x + rShoulder.x) / 2 * ctx.canvas.width;
+        const sy = (lShoulder.y + rShoulder.y) / 2 * ctx.canvas.height;
+        const hx = (lHip.x + rHip.x) / 2 * ctx.canvas.width;
+        const hy = (lHip.y + rHip.y) / 2 * ctx.canvas.height;
+
+        const cx = (sx + hx) / 2;
+        const cy = (sy + hy) / 2;
+        const length = Math.hypot(hx - sx, hy - sy);
+        const angle = Math.atan2(hy - sy, hx - sx);
+
+        ctx.save();
+        ctx.translate(cx, cy);
+        ctx.rotate(angle);
+        ctx.beginPath();
+        ctx.ellipse(0, 0, length / 2 + 20, 45, 0, 0, 2 * Math.PI); // Fat body
+        ctx.fillStyle = furWhite;
+        ctx.fill();
+        ctx.restore();
+    }
+
+    // --- 3. Paws (Black) ---
+    drawCircle(15, 12, furBlack); // L Wrist
+    drawCircle(16, 12, furBlack); // R Wrist
+    drawCircle(27, 14, furBlack); // L Ankle
+    drawCircle(28, 14, furBlack); // R Ankle
+
+    // --- 4. Head (White) ---
+    drawCircle(0, 35, furWhite); // Nose as center anchor for head
+
+    // --- 5. Face Details ---
+    if (nose && leftEye && rightEye) {
+        const nx = nose.x * ctx.canvas.width;
+        const ny = nose.y * ctx.canvas.height;
+        const lex = leftEye.x * ctx.canvas.width;
+        const ley = leftEye.y * ctx.canvas.height;
+        const rex = rightEye.x * ctx.canvas.width;
+        const rey = rightEye.y * ctx.canvas.height;
+
+        // Eye Patches (Black Ovals)
+        ctx.beginPath();
+        ctx.ellipse(lex, ley, 10, 8, -0.2, 0, 2 * Math.PI);
+        ctx.ellipse(rex, rey, 10, 8, 0.2, 0, 2 * Math.PI);
+        ctx.fillStyle = furBlack;
+        ctx.fill();
+
+        // Eyes (White dots)
+        ctx.beginPath();
+        ctx.arc(lex, ley - 2, 3, 0, 2 * Math.PI);
+        ctx.arc(rex, rey - 2, 3, 0, 2 * Math.PI);
+        ctx.fillStyle = '#fff';
+        ctx.fill();
+
+        // Nose (Black)
+        ctx.beginPath();
+        ctx.ellipse(nx, ny + 5, 6, 4, 0, 0, 2 * Math.PI);
+        ctx.fillStyle = furBlack;
+        ctx.fill();
+    }
 }
 
 /**
