@@ -8,7 +8,7 @@ export const POSE_CONNECTIONS = [
     [27, 29], [27, 31], [28, 30], [28, 32]  // Feet (optional, but good for completeness)
 ] as [number, number][];
 
-export type SkeletonStyle = 'neon' | 'minimal' | 'geometric';
+export type SkeletonStyle = 'neon' | 'minimal' | 'geometric' | 'cartoon';
 
 export function drawRobustSkeleton(
     ctx: CanvasRenderingContext2D,
@@ -27,6 +27,8 @@ export function drawRobustSkeleton(
         drawMinimalStyle(ctx, landmarks);
     } else if (style === 'geometric') {
         drawGeometricStyle(ctx, landmarks);
+    } else if (style === 'cartoon') {
+        drawCartoonStyle(ctx, landmarks);
     }
 
     ctx.restore();
@@ -134,6 +136,90 @@ function drawGeometricStyle(ctx: CanvasRenderingContext2D, landmarks: any[]) {
         ctx.rect(x - 4, y - 4, 8, 8);
         ctx.fill();
         ctx.stroke();
+    });
+}
+
+function drawCartoonStyle(ctx: CanvasRenderingContext2D, landmarks: any[]) {
+    // Cute, thick, rounded style
+    const limbColor = '#ffffff';
+    const jointColor = '#ffc0cb'; // Pink
+    const outlineColor = '#000000';
+
+    ctx.lineCap = 'round';
+    ctx.lineJoin = 'round';
+
+    // 1. Draw Limbs (Thick Capsules)
+    POSE_CONNECTIONS.forEach(([start, end]) => {
+        const p1 = landmarks[start];
+        const p2 = landmarks[end];
+        if (!p1 || !p2 || (p1.visibility && p1.visibility < 0.5) || (p2.visibility && p2.visibility < 0.5)) return;
+
+        const x1 = p1.x * ctx.canvas.width;
+        const y1 = p1.y * ctx.canvas.height;
+        const x2 = p2.x * ctx.canvas.width;
+        const y2 = p2.y * ctx.canvas.height;
+
+        // Outline
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = outlineColor;
+        ctx.lineWidth = 14;
+        ctx.stroke();
+
+        // Fill
+        ctx.beginPath();
+        ctx.moveTo(x1, y1);
+        ctx.lineTo(x2, y2);
+        ctx.strokeStyle = limbColor;
+        ctx.lineWidth = 10;
+        ctx.stroke();
+    });
+
+    // 2. Draw Joints (Circles)
+    landmarks.forEach((landmark: any, index: number) => {
+        if (index > 32 || (landmark.visibility && landmark.visibility < 0.5)) return;
+
+        const x = landmark.x * ctx.canvas.width;
+        const y = landmark.y * ctx.canvas.height;
+
+        let radius = 6;
+        let color = jointColor;
+
+        // Head (Nose)
+        if (index === 0) {
+            radius = 20; // Big head
+            color = '#ffffff';
+        }
+        // Hands/Feet
+        else if (index >= 15 && index <= 22 || index >= 27) {
+            radius = 10; // Big paws
+        }
+
+        // Outline
+        ctx.beginPath();
+        ctx.arc(x, y, radius + 2, 0, 2 * Math.PI);
+        ctx.fillStyle = outlineColor;
+        ctx.fill();
+
+        // Fill
+        ctx.beginPath();
+        ctx.arc(x, y, radius, 0, 2 * Math.PI);
+        ctx.fillStyle = color;
+        ctx.fill();
+
+        // Eyes (if Head)
+        if (index === 0) {
+            ctx.fillStyle = '#000';
+            // Left Eye
+            ctx.beginPath();
+            ctx.arc(x - 6, y - 2, 2, 0, 2 * Math.PI);
+            ctx.fill();
+            // Right Eye
+            ctx.beginPath();
+            ctx.arc(x + 6, y - 2, 2, 0, 2 * Math.PI);
+            ctx.fill();
+        }
     });
 }
 
