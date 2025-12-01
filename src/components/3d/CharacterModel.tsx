@@ -92,9 +92,22 @@ const Joint = ({ position, radius = JOINT_SIZE, color }: { position: THREE.Vecto
     );
 };
 
-const Head = ({ position, config }: { position: THREE.Vector3, config: CharacterConfig }) => {
+const Head = ({ position, config, lookAt }: { position: THREE.Vector3, config: CharacterConfig, lookAt?: THREE.Vector3 }) => {
+    const groupRef = useRef<THREE.Group>(null);
+
+    useFrame(() => {
+        if (groupRef.current && lookAt) {
+            // Smoothly look at target
+            const targetQuaternion = new THREE.Quaternion();
+            const rotationMatrix = new THREE.Matrix4();
+            rotationMatrix.lookAt(position, lookAt, new THREE.Vector3(0, 1, 0));
+            targetQuaternion.setFromRotationMatrix(rotationMatrix);
+            groupRef.current.quaternion.slerp(targetQuaternion, 0.2);
+        }
+    });
+
     return (
-        <group position={position} scale={HEAD_SCALE}>
+        <group ref={groupRef} position={position} scale={HEAD_SCALE}>
             {/* Main Head */}
             <mesh>
                 <sphereGeometry args={[0.18, 32, 32]} />
@@ -193,15 +206,35 @@ export default function CharacterModel({ landmarks, character }: CharacterModelP
     const leftAnkle = getVec(landmarks, 27);
     const rightAnkle = getVec(landmarks, 28);
 
+    // Head Landmarks for orientation
+    const leftEar = getVec(landmarks, 7);
+    const rightEar = getVec(landmarks, 8);
+
     const hipCenter = new THREE.Vector3().addVectors(leftHip, rightHip).multiplyScalar(0.5);
     const shoulderCenter = new THREE.Vector3().addVectors(leftShoulder, rightShoulder).multiplyScalar(0.5);
+
+    // Calculate Head Orientation
+    // Vector from mid-ears to nose points forward
+    const midEar = new THREE.Vector3().addVectors(leftEar, rightEar).multiplyScalar(0.5);
+    const headForward = new THREE.Vector3().subVectors(nose, midEar).normalize();
+    const headLookAt = nose.clone().add(headForward);
+
+    // Calculate Body Orientation for Tail
+    // Cross product of spine (up) and shoulders (right) gives forward
+    const spine = new THREE.Vector3().subVectors(shoulderCenter, hipCenter).normalize();
+    const shoulders = new THREE.Vector3().subVectors(rightShoulder, leftShoulder).normalize();
+    const bodyForward = new THREE.Vector3().crossVectors(shoulders, spine).normalize();
+
+    // Tail position: behind hips
+    // We use bodyForward to determine "backwards"
+    const tailPos = hipCenter.clone().sub(bodyForward.multiplyScalar(0.15)).add(new THREE.Vector3(0, -0.05, 0));
 
     // Adjust head position slightly up for cuteness
     const headPos = nose.clone().add(new THREE.Vector3(0, 0.1, 0));
 
     return (
         <group>
-            <Head position={headPos} config={config} />
+            <Head position={headPos} config={config} lookAt={headLookAt} />
 
             {/* Torso */}
             <Limb start={shoulderCenter} end={hipCenter} color={config.colors.primary} thickness={0.25} />
@@ -233,7 +266,7 @@ export default function CharacterModel({ landmarks, character }: CharacterModelP
             <Joint position={rightAnkle} radius={0.1} color={config.colors.primary} />
 
             {/* Tail */}
-            <mesh position={[hipCenter.x, hipCenter.y - 0.05, hipCenter.z - 0.15]}>
+            <mesh position={tailPos}>
                 <sphereGeometry args={[0.08, 16, 16]} />
                 <meshStandardMaterial color={config.colors.primary} />
             </mesh>
