@@ -136,3 +136,55 @@ function drawGeometricStyle(ctx: CanvasRenderingContext2D, landmarks: any[]) {
         ctx.stroke();
     });
 }
+
+/**
+ * Fits landmarks from a source aspect ratio into a destination aspect ratio (contain).
+ * Returns new landmarks with adjusted x, y coordinates.
+ */
+export const fitLandmarks = (
+    landmarks: any[],
+    srcWidth: number,
+    srcHeight: number,
+    destWidth: number,
+    destHeight: number
+): any[] => {
+    if (!landmarks || landmarks.length === 0) return [];
+
+    const srcRatio = srcWidth / srcHeight;
+    const destRatio = destWidth / destHeight;
+
+    let scale = 1;
+    let offsetX = 0;
+    let offsetY = 0;
+
+    if (srcRatio > destRatio) {
+        // Source is wider than destination (fit to width)
+        scale = destWidth / srcWidth;
+        const scaledHeight = srcHeight * scale;
+        offsetY = (destHeight - scaledHeight) / 2;
+    } else {
+        // Source is taller than destination (fit to height)
+        scale = destHeight / srcHeight;
+        const scaledWidth = srcWidth * scale;
+        offsetX = (destWidth - scaledWidth) / 2;
+    }
+
+    // Normalized offset
+    const normOffsetX = offsetX / destWidth;
+    const normOffsetY = offsetY / destHeight;
+
+    // Normalized scale (relative to destination dimensions)
+    // We need to map 0..1 in src to 0..1 in dest, but scaled and offset.
+    // x_dest = (x_src * srcWidth * scale + offsetX) / destWidth
+    //        = x_src * (srcWidth * scale / destWidth) + normOffsetX
+
+    const scaleX = (srcWidth * scale) / destWidth;
+    const scaleY = (srcHeight * scale) / destHeight;
+
+    return landmarks.map(lm => ({
+        ...lm,
+        x: lm.x * scaleX + normOffsetX,
+        y: lm.y * scaleY + normOffsetY,
+        z: lm.z * scale // Z is roughly relative to image scale
+    }));
+};

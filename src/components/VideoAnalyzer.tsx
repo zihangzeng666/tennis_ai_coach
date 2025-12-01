@@ -10,7 +10,7 @@ import { CourtDetector, Line } from '@/utils/courtDetector';
 import { VideoCompressor } from '@/utils/videoCompressor';
 import VideoTrimmer from './VideoTrimmer';
 import { motion, AnimatePresence } from 'framer-motion';
-import { drawRobustSkeleton, SkeletonStyle } from '@/utils/drawingUtils';
+import { drawRobustSkeleton, SkeletonStyle, fitLandmarks } from '@/utils/drawingUtils';
 import { usePose } from '@/context/PoseContext';
 
 interface VideoAnalyzerProps {
@@ -217,7 +217,20 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
             }
 
             if (proLandmarksRef.current) {
-                drawRobustSkeleton(skeletonCtx, proLandmarksRef.current, skeletonStyle, 0.3);
+                let landmarksToDraw = proLandmarksRef.current;
+
+                // Fit landmarks if we have pro video dimensions
+                if (proVideo && proVideo.videoWidth > 0 && skeletonCanvas.width > 0) {
+                    landmarksToDraw = fitLandmarks(
+                        proLandmarksRef.current,
+                        proVideo.videoWidth,
+                        proVideo.videoHeight,
+                        skeletonCanvas.width,
+                        skeletonCanvas.height
+                    );
+                }
+
+                drawRobustSkeleton(skeletonCtx, landmarksToDraw, skeletonStyle, 0.3);
             }
 
             if (results.poseLandmarks) {
