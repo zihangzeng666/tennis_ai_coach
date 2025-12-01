@@ -41,10 +41,10 @@ export default function UploadZone({ onFileSelected }: UploadZoneProps) {
   };
 
   return (
-    <div className="w-full relative rounded-[2rem] overflow-hidden shadow-2xl bg-black md:aspect-video group flex flex-col md:block">
+    <div className="w-full relative rounded-[2rem] overflow-hidden shadow-2xl bg-black h-[500px] md:h-auto md:aspect-video group">
 
-      {/* Background Video Layer - Full Size on Desktop, Top Section on Mobile */}
-      <div className="relative h-48 sm:h-64 md:absolute md:inset-0 z-0 pointer-events-none opacity-60 group-hover:opacity-40 transition-opacity duration-700">
+      {/* Background Video Layer - Full Size */}
+      <div className="absolute inset-0 z-0 pointer-events-none opacity-60 group-hover:opacity-40 transition-opacity duration-700">
         <AnimatePresence mode='wait'>
           <motion.video
             key={currentVideoIndex}
@@ -83,8 +83,8 @@ export default function UploadZone({ onFileSelected }: UploadZoneProps) {
         </div>
       </div>
 
-      {/* Upload Button / Card - Bottom Positioned on Desktop, Bottom Section on Mobile */}
-      <div className="relative md:absolute bottom-0 left-0 right-0 z-10 flex items-end justify-center p-4 pb-8 md:p-8 md:pb-12 bg-slate-900 md:bg-transparent">
+      {/* Upload Button / Card - Bottom Positioned */}
+      <div className="absolute bottom-0 left-0 right-0 z-10 flex items-end justify-center p-4 pb-8 md:p-8 md:pb-12">
         <div
           {...getRootProps()}
           className={clsx(
