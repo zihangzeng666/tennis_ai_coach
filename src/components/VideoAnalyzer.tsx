@@ -787,7 +787,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
 
                 {/* Left Column: Video Analysis */}
                 <div className="lg:col-span-2 space-y-6">
-                    <div className={clsx("relative bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 group", viewMode === 'side-by-side' ? "aspect-[8/9] md:aspect-[2/1]" : "aspect-video")}>
+                    <div className={clsx("relative bg-black rounded-2xl overflow-hidden shadow-2xl ring-1 ring-white/10 group", viewMode === 'side-by-side' ? "h-auto md:aspect-[2/1]" : "aspect-video")}>
 
                         {/* Container for Side-by-Side Logic */}
                         <div className={clsx("w-full h-full flex", viewMode === 'side-by-side' ? "flex-col md:flex-row" : "relative")}>
@@ -827,7 +827,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                         />
 
                         {/* Controls Overlay */}
-                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300 z-30">
+                        <div className="absolute bottom-0 left-0 right-0 p-4 bg-gradient-to-t from-black/90 via-black/50 to-transparent opacity-100 md:opacity-0 md:group-hover:opacity-100 transition-opacity duration-300 z-30">
                             <div className="flex flex-col gap-2">
                                 {/* Progress Bar */}
                                 <div className="flex items-center gap-3">
