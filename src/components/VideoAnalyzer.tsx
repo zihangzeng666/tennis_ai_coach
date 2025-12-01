@@ -2,7 +2,7 @@
 
 import React, { useRef, useEffect, useState, useCallback } from 'react';
 import Script from 'next/script';
-import { Play, Pause, RotateCcw, Loader2, Video, Activity, Settings, Download, Layout, Eye, Zap, Grid } from 'lucide-react';
+import { Play, Pause, RotateCcw, Loader2, Video, Activity, Settings, Download, Layout, Eye, Zap, Grid, Box } from 'lucide-react';
 import { analyzeKneeBend } from '@/utils/analysisEngine';
 import { BallTracker } from '@/utils/ballTracker';
 import { clsx } from 'clsx';
@@ -12,6 +12,7 @@ import VideoTrimmer from './VideoTrimmer';
 import { motion, AnimatePresence } from 'framer-motion';
 import { drawRobustSkeleton, SkeletonStyle, fitLandmarks } from '@/utils/drawingUtils';
 import { usePose } from '@/context/PoseContext';
+import AvatarCanvas from './3d/AvatarCanvas';
 
 interface VideoAnalyzerProps {
     videoFile?: File;
@@ -29,9 +30,10 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
     const [videoUrl, setVideoUrl] = useState<string>('');
     const [isPlaying, setIsPlaying] = useState(false);
     const [isExporting, setIsExporting] = useState(false);
+    const [currentLandmarks, setCurrentLandmarks] = useState<any[]>([]);
 
     // View State
-    const [viewMode, setViewMode] = useState<'overlay' | 'side-by-side' | 'skeleton'>('overlay');
+    const [viewMode, setViewMode] = useState<'overlay' | 'side-by-side' | 'skeleton' | 'avatar'>('overlay');
 
     // Detectors from Context
     const { poseDetector, proPoseDetector, isModelLoading } = usePose();
@@ -185,6 +187,11 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                 if (currentKneeBend) {
                     drawKneeBendStats(overlayCtx, currentKneeBend, overlayCanvas.width);
                 }
+
+                // Update landmarks for Avatar Mode
+                if (viewMode === 'avatar') {
+                    setCurrentLandmarks(results.poseLandmarks);
+                }
             }
             drawWatermark(overlayCtx, overlayCanvas.width, overlayCanvas.height);
             overlayCtx.restore();
@@ -318,7 +325,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
             console.error("Error in onResults:", error);
         }
 
-    }, [skeletonStyle, bgStyle, isRecording, proVideoUrl, courtLines, ballTracker]);
+    }, [skeletonStyle, bgStyle, isRecording, proVideoUrl, courtLines, ballTracker, viewMode]);
 
     // Initialize Pro Pose Listener
     useEffect(() => {
@@ -637,6 +644,19 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                             <Zap className={clsx("w-3 h-3 md:w-4 md:h-4", viewMode === 'skeleton' && "stroke-[2.5px]")} />
                             <span className="hidden sm:inline text-sm">Skeleton</span>
                         </button>
+                        <button
+                            onClick={() => setViewMode('avatar')}
+                            className={clsx(
+                                "px-2 py-1.5 md:px-4 md:py-2.5 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
+                                viewMode === 'avatar'
+                                    ? "bg-white dark:bg-slate-700 text-blue-600 shadow-[0_2px_8px_rgba(0,0,0,0.08)] scale-100 font-medium"
+                                    : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50"
+                            )}
+                            title="3D Avatar"
+                        >
+                            <Box className={clsx("w-3 h-3 md:w-4 md:h-4", viewMode === 'avatar' && "stroke-[2.5px]")} />
+                            <span className="hidden sm:inline text-sm">3D</span>
+                        </button>
                     </div>
                 </div>
 
@@ -776,7 +796,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                         <div className={clsx("w-full h-full flex", viewMode === 'side-by-side' ? "flex-col md:flex-row" : "relative")}>
 
                             {/* Video / Overlay Side */}
-                            <div className={clsx("relative", viewMode === 'side-by-side' ? "w-full h-1/2 md:w-1/2 md:h-full border-b md:border-b-0 md:border-r border-white/10" : "w-full h-full", viewMode === 'skeleton' && "hidden")}>
+                            <div className={clsx("relative", viewMode === 'side-by-side' ? "w-full h-1/2 md:w-1/2 md:h-full border-b md:border-b-0 md:border-r border-white/10" : "w-full h-full", (viewMode === 'skeleton' || viewMode === 'avatar') && "hidden")}>
                                 <video
                                     ref={videoRef}
                                     src={videoUrl || undefined}
@@ -796,9 +816,17 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
 
                             {/* Skeleton Side */}
                             <div className={clsx("relative", viewMode === 'side-by-side' ? "w-full h-1/2 md:w-1/2 md:h-full" : "w-full h-full", viewMode === 'overlay' && "hidden")}>
+                                {/* 3D Avatar View */}
+                                {viewMode === 'avatar' && (
+                                    <div className="absolute inset-0 z-20">
+                                        <AvatarCanvas landmarks={currentLandmarks} />
+                                    </div>
+                                )}
+
+                                {/* Skeleton Only Canvas */}
                                 <canvas
                                     ref={skeletonCanvasRef}
-                                    className="absolute top-0 left-0 w-full h-full object-contain z-20"
+                                    className={clsx("absolute top-0 left-0 w-full h-full object-contain pointer-events-none", viewMode === 'skeleton' ? "opacity-100" : (viewMode === 'side-by-side' ? "hidden" : "opacity-0"))}
                                 />
                             </div>
                         </div>
