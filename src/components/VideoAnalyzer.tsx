@@ -595,18 +595,18 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
             />
 
             {/* Top Toolbar */}
-            <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl p-4 flex flex-wrap items-center justify-between gap-4 shadow-xl">
-                <div className="flex items-center gap-4">
-                    <div className="flex items-center gap-2 px-4 py-2 bg-slate-100 dark:bg-slate-800 rounded-xl">
+            <div className="bg-white/90 dark:bg-slate-900/90 backdrop-blur-md border border-slate-200 dark:border-slate-800 rounded-2xl p-2 md:p-4 flex flex-wrap items-center justify-between gap-2 md:gap-4 shadow-xl">
+                <div className="flex items-center gap-2 md:gap-4">
+                    <div className="flex items-center gap-1.5 md:gap-2 px-2 py-1 md:px-4 md:py-2 bg-slate-100 dark:bg-slate-800 rounded-xl">
                         {isModelLoading ? (
                             <>
-                                <Loader2 className="w-5 h-5 text-yellow-500 animate-spin" />
-                                <span className="text-sm font-medium text-slate-600 dark:text-gray-300">Loading AI...</span>
+                                <Loader2 className="w-3 h-3 md:w-5 md:h-5 text-yellow-500 animate-spin" />
+                                <span className="text-xs md:text-sm font-medium text-slate-600 dark:text-gray-300">Loading...</span>
                             </>
                         ) : (
                             <>
-                                <Activity className="w-5 h-5 text-yellow-500" />
-                                <span className="text-sm font-medium text-yellow-600">AI Ready</span>
+                                <Activity className="w-3 h-3 md:w-5 md:h-5 text-yellow-500" />
+                                <span className="text-xs md:text-sm font-medium text-yellow-600">Ready</span>
                             </>
                         )}
                     </div>
@@ -614,91 +614,91 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                     <div className="h-8 w-px bg-slate-200 dark:bg-slate-700" />
 
                     {/* View Mode Toggles - Premium Segmented Control */}
-                    <div className="flex bg-slate-100 dark:bg-slate-800/50 p-1.5 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
+                    <div className="flex bg-slate-100 dark:bg-slate-800/50 p-1 rounded-xl border border-slate-200/50 dark:border-slate-700/50">
                         <button
                             onClick={() => setViewMode('overlay')}
                             className={clsx(
-                                "px-4 py-2.5 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
+                                "px-2 py-1.5 md:px-4 md:py-2.5 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
                                 viewMode === 'overlay'
                                     ? "bg-white dark:bg-slate-700 text-blue-600 shadow-[0_2px_8px_rgba(0,0,0,0.08)] scale-100 font-medium"
                                     : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50"
                             )}
                             title="Overlay View"
                         >
-                            <Eye className={clsx("w-4 h-4", viewMode === 'overlay' && "stroke-[2.5px]")} />
+                            <Eye className={clsx("w-3 h-3 md:w-4 md:h-4", viewMode === 'overlay' && "stroke-[2.5px]")} />
                             <span className="hidden sm:inline text-sm">Overlay</span>
                         </button>
                         <button
                             onClick={() => setViewMode('side-by-side')}
                             className={clsx(
-                                "px-4 py-2.5 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
+                                "px-2 py-1.5 md:px-4 md:py-2.5 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
                                 viewMode === 'side-by-side'
                                     ? "bg-white dark:bg-slate-700 text-blue-600 shadow-[0_2px_8px_rgba(0,0,0,0.08)] scale-100 font-medium"
                                     : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50"
                             )}
                             title="Side-by-Side View"
                         >
-                            <Grid className={clsx("w-4 h-4", viewMode === 'side-by-side' && "stroke-[2.5px]")} />
+                            <Grid className={clsx("w-3 h-3 md:w-4 md:h-4", viewMode === 'side-by-side' && "stroke-[2.5px]")} />
                             <span className="hidden sm:inline text-sm">Split</span>
                         </button>
                         <button
                             onClick={() => setViewMode('skeleton')}
                             className={clsx(
-                                "px-4 py-2.5 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
+                                "px-2 py-1.5 md:px-4 md:py-2.5 rounded-lg transition-all duration-300 flex items-center justify-center gap-2",
                                 viewMode === 'skeleton'
                                     ? "bg-white dark:bg-slate-700 text-blue-600 shadow-[0_2px_8px_rgba(0,0,0,0.08)] scale-100 font-medium"
                                     : "text-slate-500 hover:text-slate-700 dark:text-slate-400 dark:hover:text-slate-200 hover:bg-slate-200/50 dark:hover:bg-slate-700/50"
                             )}
                             title="Skeleton Only"
                         >
-                            <Zap className={clsx("w-4 h-4", viewMode === 'skeleton' && "stroke-[2.5px]")} />
+                            <Zap className={clsx("w-3 h-3 md:w-4 md:h-4", viewMode === 'skeleton' && "stroke-[2.5px]")} />
                             <span className="hidden sm:inline text-sm">Skeleton</span>
                         </button>
                     </div>
                 </div>
 
-                <div className="flex items-center gap-3">
+                <div className="flex items-center gap-2 md:gap-3">
                     <button
                         onClick={onReset}
-                        className="flex items-center gap-2 px-4 py-2 text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
+                        className="flex items-center gap-1.5 md:gap-2 px-2 py-1.5 md:px-4 md:py-2 text-xs md:text-sm font-medium text-slate-600 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-xl transition-colors"
                     >
-                        <RotateCcw className="w-4 h-4" />
+                        <RotateCcw className="w-3 h-3 md:w-4 md:h-4" />
                         Reset
                     </button>
 
                     {/* Export Dropdown / Buttons */}
-                    <div className="flex gap-2">
+                    <div className="flex gap-1.5 md:gap-2">
                         {isRecording ? (
                             <button
                                 onClick={stopRecording}
-                                className="flex items-center gap-2 px-6 py-2 rounded-xl font-medium bg-red-500 text-white animate-pulse"
+                                className="flex items-center gap-2 px-3 py-1.5 md:px-6 md:py-2 rounded-xl font-medium bg-red-500 text-white animate-pulse text-xs md:text-base"
                             >
-                                <div className="w-2 h-2 rounded-full bg-white" />
-                                Stop Recording
+                                <div className="w-1.5 h-1.5 md:w-2 md:h-2 rounded-full bg-white" />
+                                Stop
                             </button>
                         ) : (
                             <>
                                 <button
                                     onClick={() => startRecording('overlay')}
                                     disabled={isExporting}
-                                    className="px-3 py-2 text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-300 transition-colors"
+                                    className="px-2 py-1.5 md:px-3 md:py-2 text-[10px] md:text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-300 transition-colors"
                                 >
-                                    Export Overlay
+                                    Overlay
                                 </button>
                                 <button
                                     onClick={() => startRecording('skeleton')}
                                     disabled={isExporting}
-                                    className="px-3 py-2 text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-300 transition-colors"
+                                    className="px-2 py-1.5 md:px-3 md:py-2 text-[10px] md:text-xs font-medium bg-slate-100 hover:bg-slate-200 dark:bg-slate-800 dark:hover:bg-slate-700 rounded-lg text-slate-700 dark:text-slate-300 transition-colors"
                                 >
-                                    Export Skeleton
+                                    Skeleton
                                 </button>
                                 <button
                                     onClick={() => startRecording('combined')}
                                     disabled={isExporting}
-                                    className="flex items-center gap-2 px-4 py-2 rounded-xl font-medium bg-blue-600 hover:bg-blue-500 text-white transition-colors shadow-lg shadow-blue-500/20"
+                                    className="flex items-center gap-1.5 md:gap-2 px-2 py-1.5 md:px-4 md:py-2 rounded-xl font-medium bg-blue-600 hover:bg-blue-500 text-white transition-colors shadow-lg shadow-blue-500/20 text-[10px] md:text-sm"
                                 >
-                                    {isExporting ? <Loader2 className="w-4 h-4 animate-spin" /> : <Download className="w-4 h-4" />}
-                                    Export All
+                                    {isExporting ? <Loader2 className="w-3 h-3 md:w-4 md:h-4 animate-spin" /> : <Download className="w-3 h-3 md:w-4 md:h-4" />}
+                                    All
                                 </button>
                             </>
                         )}
