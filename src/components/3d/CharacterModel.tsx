@@ -239,30 +239,14 @@ export default function CharacterModel({ landmarks, character }: CharacterModelP
             {/* Torso */}
             <Limb start={shoulderCenter} end={hipCenter} color={config.colors.primary} thickness={0.25} />
 
-            {/* Arms */}
-            <Joint position={leftShoulder} color={config.colors.primary} />
-            <Limb start={leftShoulder} end={leftElbow} color={config.colors.primary} />
-            <Joint position={leftElbow} color={config.colors.primary} />
-            <Limb start={leftElbow} end={leftWrist} color={config.colors.primary} />
+            {/* Floating Hands (Rayman Style) */}
+            {/* We skip the arms (shoulders/elbows) to prevent clipping */}
             <Joint position={leftWrist} radius={0.08} color={config.colors.primary} />
-
-            <Joint position={rightShoulder} color={config.colors.primary} />
-            <Limb start={rightShoulder} end={rightElbow} color={config.colors.primary} />
-            <Joint position={rightElbow} color={config.colors.primary} />
-            <Limb start={rightElbow} end={rightWrist} color={config.colors.primary} />
             <Joint position={rightWrist} radius={0.08} color={config.colors.primary} />
 
-            {/* Legs */}
-            <Joint position={leftHip} radius={0.16} color={config.colors.primary} />
-            <Limb start={leftHip} end={leftKnee} color={config.colors.primary} thickness={0.14} />
-            <Joint position={leftKnee} color={config.colors.primary} />
-            <Limb start={leftKnee} end={leftAnkle} color={config.colors.primary} thickness={0.12} />
+            {/* Floating Feet (Rayman Style) */}
+            {/* We skip the legs (hips/knees) to prevent clipping */}
             <Joint position={leftAnkle} radius={0.1} color={config.colors.primary} />
-
-            <Joint position={rightHip} radius={0.16} color={config.colors.primary} />
-            <Limb start={rightHip} end={rightKnee} color={config.colors.primary} thickness={0.14} />
-            <Joint position={rightKnee} color={config.colors.primary} />
-            <Limb start={rightKnee} end={rightAnkle} color={config.colors.primary} thickness={0.12} />
             <Joint position={rightAnkle} radius={0.1} color={config.colors.primary} />
 
             {/* Tail */}

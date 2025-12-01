@@ -826,7 +826,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                                 {/* Skeleton Only Canvas */}
                                 <canvas
                                     ref={skeletonCanvasRef}
-                                    className={clsx("absolute top-0 left-0 w-full h-full object-contain pointer-events-none", viewMode === 'skeleton' ? "opacity-100" : (viewMode === 'side-by-side' ? "hidden" : "opacity-0"))}
+                                    className={clsx("absolute top-0 left-0 w-full h-full object-contain pointer-events-none", viewMode === 'skeleton' || viewMode === 'side-by-side' ? "opacity-100" : "opacity-0")}
                                 />
                             </div>
                         </div>
