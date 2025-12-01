@@ -217,7 +217,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
             }
 
             if (proLandmarksRef.current) {
-                drawRobustSkeleton(skeletonCtx, proLandmarksRef.current, 'minimal', 0.3);
+                drawRobustSkeleton(skeletonCtx, proLandmarksRef.current, skeletonStyle, 0.3);
             }
 
             if (results.poseLandmarks) {
@@ -236,7 +236,7 @@ export default function VideoAnalyzer({ videoFile, videoUrlProp, onReset }: Vide
                 if (proCtx) {
                     proCtx.clearRect(0, 0, proOverlayCanvas.width, proOverlayCanvas.height);
                     if (proLandmarksRef.current && proLandmarksRef.current.length > 0) {
-                        drawRobustSkeleton(proCtx, proLandmarksRef.current, 'neon', 1.0);
+                        drawRobustSkeleton(proCtx, proLandmarksRef.current, skeletonStyle, 1.0);
                     }
                 }
             }
