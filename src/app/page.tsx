@@ -75,21 +75,20 @@ function HomeContent() {
           </>
         ) : (
           <>
-            {/* Light Theme Background - Premium Porcelain & Ambient Light */}
-            <div className="absolute inset-0 bg-[#F8F9FA]"></div>
+            {/* Light Theme Background - Liquid Glass Aesthetic */}
+            <div className="absolute inset-0 bg-[#ffffff]"></div>
 
-            {/* Background Image Integration - Visible & Colorful */}
-            <div className="absolute inset-0 bg-[url('/backgrounds/background1.png')] bg-cover bg-center bg-no-repeat opacity-30"></div>
+            {/* Animated Mesh Gradients */}
+            <div className="absolute top-[-10%] left-[-10%] w-[60%] h-[60%] rounded-full bg-cyan-200/40 blur-[100px] animate-pulse"></div>
+            <div className="absolute top-[20%] right-[-10%] w-[50%] h-[60%] rounded-full bg-purple-200/40 blur-[120px] animate-pulse delay-700"></div>
+            <div className="absolute bottom-[-10%] left-[20%] w-[50%] h-[50%] rounded-full bg-rose-200/40 blur-[100px] animate-pulse delay-1000"></div>
+            <div className="absolute bottom-[10%] right-[20%] w-[40%] h-[40%] rounded-full bg-blue-200/30 blur-[80px] animate-pulse delay-500"></div>
 
-            {/* Soft Ambient Gradients Overlay - Reduced Opacity */}
-            <div className="absolute top-[-20%] left-[-10%] w-[50%] h-[50%] rounded-full bg-rose-200/30 blur-[120px] mix-blend-multiply"></div>
-            <div className="absolute bottom-[-20%] right-[-10%] w-[50%] h-[50%] rounded-full bg-blue-200/30 blur-[120px] mix-blend-multiply"></div>
+            {/* Glass Surface Texture */}
+            <div className="absolute inset-0 opacity-[0.02] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
 
-            {/* Subtle Noise Texture for Depth */}
-            <div className="absolute inset-0 opacity-[0.03] bg-[url('https://grainy-gradients.vercel.app/noise.svg')]"></div>
-
-            {/* Delicate Grid Overlay (Optional, very subtle) */}
-            <div className="absolute inset-0 bg-[linear-gradient(to_right,#80808012_1px,transparent_1px),linear-gradient(to_bottom,#80808012_1px,transparent_1px)] bg-[size:24px_24px]"></div>
+            {/* Subtle Refraction Overlay */}
+            <div className="absolute inset-0 bg-gradient-to-br from-white/40 via-transparent to-white/10 pointer-events-none"></div>
           </>
         )}
       </div>
